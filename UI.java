@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.BorderLayout;
 import javax.swing.JButton;
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -17,17 +16,25 @@ import javax.swing.JTextField;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.swing.JFileChooser;
 import java.util.Scanner;
 import java.net.URL;
  
-/*class ButtonHandler implements ActionListener {
-    public void actionPerformed(ActionEvent e) {
-        JOptionPane.showMessageDialog(null,"I am the boring one.");
-    }
-}*/
+/** 
+ * @author Rudra, Mariana, Payal
+ * This class takes care of the interface
+ * This interface consists of a menu bar, text field for the url, a fetch button, 
+ * text filed for website content, a Save to Text button, and Save to JSON button
+ */
 public class UI extends JFrame implements ActionListener {
-    public void setupMenu() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	public void setupMenu() {
+    	/**
+    	 * File is a menu item in the menu bar
+    	 * Exit will follow when the File option is clicked
+    	 */
         JMenuBar mbar = new JMenuBar();
         JMenu mnuFile = new JMenu("File");
         JMenuItem miExit = new JMenuItem("Exit");
@@ -39,22 +46,40 @@ public class UI extends JFrame implements ActionListener {
         mnuFile.add(miExit);
         mbar.add(mnuFile);
         setJMenuBar(mbar);
+        /**
+    	 * Help is a menu item in the menu bar
+    	 * About will follow when the Help option is clicked
+    	 */
         JMenu mnuHelp = new JMenu("Help");
         JMenuItem miAbout = new JMenuItem("About");
+        /**
+         * About will perform an action that brings up a dialog box,
+         * this contains author info.
+         */
         miAbout.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	JOptionPane.showMessageDialog(null,"Author: Rudra Patel");
+            	JOptionPane.showMessageDialog(null,"Authors:  "
+            			+ "Rudra Patel"
+            			+ "\n                 Mariana Hernandez"
+            			+ "\n                 Payal Ahuja");
             }
         });
         mnuHelp.add(miAbout);
         mbar.add(mnuHelp);
     }
+    /**
+     * This is public UI()
+     * It takes care of how the user interface looks, and which actions are performed
+     * when a certain button is clicked.
+     */
     public UI() {
         // set up the look inside the constructor
     	setTitle("Web Scrapper");
         setBounds(50,100,400,300);  // left = 50, top=100, width=400, height= 300
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        
+        /**
+         * These panels will make up the interface.
+         */
     	JPanel btmPnl = new JPanel();
     	btmPnl.setLayout(new FlowLayout());
     	JPanel topPnl = new JPanel();
@@ -71,22 +96,35 @@ public class UI extends JFrame implements ActionListener {
         topPnl.add(txtURL);
         topPnl.add(btnFetch);
         c.add(topPnl,BorderLayout.NORTH);
-        
+        /**
+         * Takes care of the monospaced font required for the assignment
+         */
         JTextArea txt = new JTextArea();
         Font font = new Font("Monospaced", Font.BOLD,20);
         txt.setFont(font);
-        //c.add(txt, BorderLayout.CENTER);
         JScrollPane sp = new JScrollPane(txt);
         sp.setPreferredSize(new Dimension(400,300));
+        /**
+         * JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED adds a scroll bar as needed
+         */
         sp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         c.add(sp, BorderLayout.CENTER);
-        
+        /**
+         * This will take the content from the website, and put it in the text field
+         * in our UI instead of putting it in the Console.
+         */
         btnFetch.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String text = txtURL.getText();
-                Scanner sc = new Scanner(text);
+                @SuppressWarnings("resource")
+				Scanner sc = new Scanner(text);
                 String addr = sc.nextLine();
                 String line;
+                /**
+                 * @return website content
+                 * if there is an err
+                 * then it'll print "Could not connect to the website."
+                 */
                 try {
                     URL link = new URL(addr);
                     Scanner linksc = new Scanner(link.openStream());
@@ -99,12 +137,11 @@ public class UI extends JFrame implements ActionListener {
                     ex.printStackTrace();
                     System.out.println("Could not connect to the website.");
                 	}
-                /*String txt = link.getText();
-                textToShow = textToShow + "\n" + text;
-                txaWords.setText(textToShow);*/
             	}
             });
-        
+        /**
+         * Button location south
+         */
         btmPnl.add(btnSaveToText);
         c.add(btmPnl,BorderLayout.SOUTH);
         
@@ -114,8 +151,9 @@ public class UI extends JFrame implements ActionListener {
         setupMenu();
     }
     public void actionPerformed(ActionEvent e) {
-//      System.out.println("Hey. Hee haw. I'm from the South. Waffle House.");
-        //JOptionPane.showMessageDialog(null,"");
+    /**
+     * This is used for debugging purposes for our code
+     */
     }
     public static void main(String[] args) {
         UI frm = new UI();
