@@ -13,12 +13,13 @@ import java.util.List;
 import java.util.Scanner;
 
 public class ScreenScraper {
+	static ArrayList<Course> courses = new ArrayList<Course>();
+
 	public static void main(String[] args) {
 		System.out.print("Enter url: ");
 		Scanner sc = new Scanner(System.in);
 		String addr = "http://lewisu.smartcatalogiq.com/Undergrad-2018-2019/Undergraduate-Catalog/College-of-Arts-and-Sciences/Computer-Science/Computer-Science-Bachelor-of-Science";
 		String linesCollection = "";
-		ArrayList<Course> courses = new ArrayList<Course>();
 		String line;
 		
 		try {
@@ -46,23 +47,24 @@ public class ScreenScraper {
 			for(String elementString : elementStrings) {
 				String[] elements = elementString.split("\">");
 				if(elements[0].contains("coursenumber")) {
-				int endOfCourseNameIndex = elements[3].indexOf("</a></td><td");
-				String classId = elements[3].substring(0, endOfCourseNameIndex);
+				int endOfCourseNameIndex = elements[2].indexOf("</a></td><td");
+				String classId = elements[2].substring(0, endOfCourseNameIndex);
 				courseObj.setCourseNumber(classId);
 				}
 				if(elements[0].contains("coursetitle")) {
-				int endOfCourseTitleIndex = elements[2].indexOf("</td><td");
-				String classTitle = elements[2].substring(0, endOfCourseTitleIndex);
+				int endOfCourseTitleIndex = elements[1].indexOf("</td><td");
+				String classTitle = elements[1].substring(0, endOfCourseTitleIndex);
 				courseObj.setCourseTitle(classTitle);
 				}
 				if(elements[0].contains("credits")) {
-				String credits = elements[2].substring(0, 1);
+				String credits = elements[1].substring(0, 1);
 				courseObj.setCourseCredits(credits);
 				}
 			}
+			courses.add(courseObj);
+
 		}
 		return null;
 		
 	}
-	
 }
