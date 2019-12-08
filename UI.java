@@ -74,7 +74,7 @@ public class UI extends JFrame implements ActionListener {
      */
     public UI() {
         // set up the look inside the constructor
-    	setTitle("Web Scrapper");
+    	setTitle("Web Scraper");
         setBounds(50,100,400,300);  // left = 50, top=100, width=400, height= 300
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         /**
@@ -159,6 +159,19 @@ public class UI extends JFrame implements ActionListener {
         c.add(btmPnl,BorderLayout.SOUTH);
         
         btmPnl.add(btnSaveToJSON);
+        btnSaveToJSON.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		try {
+        			ScreenScraper s = new ScreenScraper();
+            		Writer writer = new Writer();
+            		
+            		writer.writeToJSON(s.getCourses());
+        		} catch(Exception ex) {
+        			System.out.println("Something went wrong...");
+        		}
+        		
+        	}
+        });
         c.add(btmPnl,BorderLayout.SOUTH);
         
         setupMenu();
