@@ -143,6 +143,19 @@ public class UI extends JFrame implements ActionListener {
          * Button location south
          */
         btmPnl.add(btnSaveToText);
+        btnSaveToText.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		try {
+        			ScreenScraper s = new ScreenScraper();
+            		Writer writer = new Writer();
+            		
+            		writer.writeToText(s.getCourses());
+        		} catch(Exception ex) {
+        			System.out.println("Something went wrong...");
+        		}
+        		
+        	}
+        });
         c.add(btmPnl,BorderLayout.SOUTH);
         
         btmPnl.add(btnSaveToJSON);

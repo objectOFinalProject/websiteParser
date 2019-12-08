@@ -4,7 +4,19 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
+/**
+ * 
+ * @author Payal, Mariana, Rudra
+ * This class is responsible for saving the course
+ * information, given through an ArrayList, to a
+ * text file and a JSON file.
+ *
+ */
 public class Writer {
+	/**
+	 * 
+	 * @param courses list of courses, given by ScreenScraper class
+	 */
 	public void writeToText(ArrayList<Course> courses) {
 		try {
 			//creates text-output stream
@@ -22,6 +34,11 @@ public class Writer {
 		}		
 	}
 	
+	/**
+	 * 
+	 * @param courses list of courses, given by ScreenScraper class
+	 */
+	@SuppressWarnings("unchecked")
 	public void writeToJSON(ArrayList<Course> courses) {
 		try {
 			PrintWriter writer = new PrintWriter(new BufferedWriter(
