@@ -5,8 +5,13 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.BorderLayout;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
+
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -155,7 +160,7 @@ public class UI extends JFrame implements ActionListener {
          */
         btmPnl.add(btnSaveToText);
         
-        btnSaveToText.addActionListener(new ActionListener() {
+        /*btnSaveToText.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		ScreenScraper s = new ScreenScraper();
         		Writer w = new Writer();
@@ -167,12 +172,33 @@ public class UI extends JFrame implements ActionListener {
         			System.out.println("Could not save to text.");
         		}
         	}
-        });
+        });*/
         	
         c.add(btmPnl,BorderLayout.SOUTH);
         
+        btnSaveToText.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	ArrayList<Course> courses = new ArrayList<Course>();
+            	String text = txtURL.getText();
+            	JFrame parentFrame = new JFrame();
+            	 
+            	JFileChooser fileChooser = new JFileChooser();
+            	fileChooser.setDialogTitle("Specify a file to save");   
+            	 
+            	int userSelection = fileChooser.showSaveDialog(parentFrame);
+            	
+            	
+            	if (userSelection == JFileChooser.APPROVE_OPTION) {
+            	    //FileWriter fileToSave = new FileWriter(fileChooser.getSelectedFile()
+					//		+".txt");
+					writeToText(fileChooser.getSelectedFile()+".txt", txt.getText());
+					//fileToSave = txt.getText();
+            	}
+        }
+        });
+        
         btmPnl.add(btnSaveToJSON);
-        btnSaveToJSON.addActionListener(new ActionListener() {
+        /*btnSaveToJSON.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		ScreenScraper s = new ScreenScraper();
         		Writer w = new Writer();
@@ -184,10 +210,24 @@ public class UI extends JFrame implements ActionListener {
         			System.out.println("Could not save to JSON.");
         		}
         	}
-        });
+        });*/
         
         c.add(btmPnl,BorderLayout.SOUTH);
-        
+        btnSaveToJSON.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	JFrame parentFrame = new JFrame();
+            	 
+            	JFileChooser fileChooser = new JFileChooser();
+            	fileChooser.setDialogTitle("Specify a file to save");   
+            	 
+            	int userSelection = fileChooser.showSaveDialog(parentFrame);
+            	
+            	
+            	if (userSelection == JFileChooser.APPROVE_OPTION) {
+            		writeToText(fileChooser.getSelectedFile()+".json", txt.getText());
+            	}
+        }
+        });
         setupMenu();
     }
     private static ArrayList<Course> convertLinesToCourses(String linesCollection){
@@ -217,6 +257,26 @@ public class UI extends JFrame implements ActionListener {
 		return null;
 		
 	}
+    
+    public boolean writeToText(String file, String string) {
+    	
+		try {
+			//creates text-output stream
+			PrintWriter writer = new PrintWriter(new BufferedWriter
+					(new FileWriter(file)));
+			
+			//for(Course c: string) {
+				writer.println(string);
+			//}
+			
+			writer.close();
+			return true;
+		}
+		catch(Exception e) {
+			return false;
+		}		
+	}
+
     public void actionPerformed(ActionEvent e) {
     /**
      * This is used for debugging purposes for our code
@@ -226,6 +286,6 @@ public class UI extends JFrame implements ActionListener {
         UI frm = new UI();
         frm.setVisible(true);  // show the frame
         ScreenScraper s = new ScreenScraper();
-        s.processURL();
+        //s.processURL();
     }
 }
