@@ -13,6 +13,16 @@ import java.util.ArrayList;
  *
  */
 public class Writer {
+	/*public static void main(String[] args) {
+		ScreenScraper s = new ScreenScraper();
+		ArrayList<Course> courses = s.getCourses();
+		for(Course c:courses) {
+			System.out.println(c.getCourseNumber());
+			System.out.println(c.getCourseTitle());
+			System.out.println(c.getCourseCredits());
+			System.out.println();
+		}
+	}*/
 	/**
 	 * 
 	 * @param courses list of courses, given by ScreenScraper class
@@ -24,7 +34,10 @@ public class Writer {
 					(new FileWriter("output.txt")));
 			
 			for(Course c: courses) {
-				writer.println(c);
+				writer.println(c.getCourseNumber());
+				writer.println(c.getCourseTitle());
+				writer.println(c.getCourseCredits());
+				writer.println();
 			}
 			
 			writer.close();

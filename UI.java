@@ -76,7 +76,7 @@ public class UI extends JFrame implements ActionListener {
      */
     public UI() {
         // set up the look inside the constructor
-    	setTitle("Web Scrapper");
+    	setTitle("Web Scraper");
         setBounds(50,100,400,300);  // left = 50, top=100, width=400, height= 300
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         /**
@@ -154,9 +154,38 @@ public class UI extends JFrame implements ActionListener {
          * Button location south
          */
         btmPnl.add(btnSaveToText);
+        
+        btnSaveToText.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		ScreenScraper s = new ScreenScraper();
+        		Writer w = new Writer();
+        		
+        		try {
+        			w.writeToText(s.getCourses());
+        		} catch(Exception ex) {
+        			ex.printStackTrace();
+        			System.out.println("Could not save to text.");
+        		}
+        	}
+        });
+        	
         c.add(btmPnl,BorderLayout.SOUTH);
         
         btmPnl.add(btnSaveToJSON);
+        btnSaveToJSON.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		ScreenScraper s = new ScreenScraper();
+        		Writer w = new Writer();
+        		
+        		try {
+        			w.writeToJSON(s.getCourses());
+        		} catch(Exception ex) {
+        			ex.printStackTrace();
+        			System.out.println("Could not save to JSON.");
+        		}
+        	}
+        });
+        
         c.add(btmPnl,BorderLayout.SOUTH);
         
         setupMenu();
@@ -196,5 +225,7 @@ public class UI extends JFrame implements ActionListener {
     public static void main(String[] args) {
         UI frm = new UI();
         frm.setVisible(true);  // show the frame
+        ScreenScraper s = new ScreenScraper();
+        s.processURL();
     }
 }

@@ -13,9 +13,9 @@ import java.util.List;
 import java.util.Scanner;
 
 public class ScreenScraper {
-	static ArrayList<Course> courses = new ArrayList<Course>();
+	ArrayList<Course> courses = new ArrayList<Course>();
 
-	public static void main(String[] args) {
+	public void processURL() {
 		System.out.print("Enter url: ");
 		Scanner sc = new Scanner(System.in);
 		String addr = "http://lewisu.smartcatalogiq.com/Undergrad-2018-2019/Undergraduate-Catalog/College-of-Arts-and-Sciences/Computer-Science/Computer-Science-Bachelor-of-Science";
@@ -38,7 +38,7 @@ public class ScreenScraper {
 		}	
 
 	}	
-	private static ArrayList<Course> convertLinesToCourses(String linesCollection){
+	private ArrayList<Course> convertLinesToCourses(String linesCollection){
 		String[] tableStrings = linesCollection.split("<table>");
 		String[] courseStrings = tableStrings[0].split("<tr>");
 		for(String course : courseStrings) {
@@ -66,5 +66,9 @@ public class ScreenScraper {
 		}
 		return null;
 		
+	}
+	
+	public ArrayList<Course> getCourses(){
+		return courses;
 	}
 }
