@@ -16,6 +16,8 @@ import javax.swing.JTextField;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.net.URL;
  
@@ -74,7 +76,7 @@ public class UI extends JFrame implements ActionListener {
      */
     public UI() {
         // set up the look inside the constructor
-    	setTitle("Web Scraper");
+    	setTitle("Web Scrapper");
         setBounds(50,100,400,300);  // left = 50, top=100, width=400, height= 300
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         /**
@@ -113,13 +115,19 @@ public class UI extends JFrame implements ActionListener {
          * This will take the content from the website, and put it in the text field
          * in our UI instead of putting it in the Console.
          */
+        
+        
         btnFetch.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+        
+        	public void actionPerformed(ActionEvent e) {
                 String text = txtURL.getText();
                 @SuppressWarnings("resource")
 				Scanner sc = new Scanner(text);
                 String addr = sc.nextLine();
                 String line;
+                String linesCollection = "";
+                ArrayList<Course> courses = new ArrayList<Course>();
+                //ArrayList<Course> courses = new ArrayList<Course>();
                 /**
                  * @return website content
                  * if there is an err
@@ -129,9 +137,12 @@ public class UI extends JFrame implements ActionListener {
                     URL link = new URL(addr);
                     Scanner linksc = new Scanner(link.openStream());
                     while (linksc.hasNextLine()) {
+                    	//convertLinesToCourses(linesCollection);
                         line = linksc.nextLine();
                         txt.setText(txt.getText() + line + "\n");
+                        linesCollection += line;
                     }
+                    courses = convertLinesToCourses(linesCollection);
                     linksc.close();
                 	} catch (Exception ex) {
                     ex.printStackTrace();
@@ -143,39 +154,40 @@ public class UI extends JFrame implements ActionListener {
          * Button location south
          */
         btmPnl.add(btnSaveToText);
-        btnSaveToText.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		try {
-        			ScreenScraper s = new ScreenScraper();
-            		Writer writer = new Writer();
-            		
-            		writer.writeToText(s.getCourses());
-        		} catch(Exception ex) {
-        			System.out.println("Something went wrong...");
-        		}
-        		
-        	}
-        });
         c.add(btmPnl,BorderLayout.SOUTH);
         
         btmPnl.add(btnSaveToJSON);
-        btnSaveToJSON.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		try {
-        			ScreenScraper s = new ScreenScraper();
-            		Writer writer = new Writer();
-            		
-            		writer.writeToJSON(s.getCourses());
-        		} catch(Exception ex) {
-        			System.out.println("Something went wrong...");
-        		}
-        		
-        	}
-        });
         c.add(btmPnl,BorderLayout.SOUTH);
         
         setupMenu();
     }
+    private static ArrayList<Course> convertLinesToCourses(String linesCollection){
+		String[] tableStrings = linesCollection.split("<table>");
+		String[] courseStrings = tableStrings[0].split("<tr>");
+		for(String course : courseStrings) {
+			String[] elementStrings = course.split("<td");
+			Course courseObj = new Course();
+			for(String elementString : elementStrings) {
+				String[] elements = elementString.split("\">");
+				if(elements[0].contains("coursenumber")) {
+				int endOfCourseNameIndex = elements[3].indexOf("</a></td><td");
+				String classId = elements[3].substring(0, endOfCourseNameIndex);
+				courseObj.setCourseNumber(classId);
+				}
+				if(elements[0].contains("coursetitle")) {
+				int endOfCourseTitleIndex = elements[2].indexOf("</td><td");
+				String classTitle = elements[2].substring(0, endOfCourseTitleIndex);
+				courseObj.setCourseTitle(classTitle);
+				}
+				if(elements[0].contains("credits")) {
+				String credits = elements[2].substring(0, 1);
+				courseObj.setCourseCredits(credits);
+				}
+			}
+		}
+		return null;
+		
+	}
     public void actionPerformed(ActionEvent e) {
     /**
      * This is used for debugging purposes for our code
