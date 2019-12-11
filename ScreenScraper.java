@@ -15,7 +15,6 @@ import java.util.Scanner;
 
 public class ScreenScraper {
 	static ArrayList<Course> courses = new ArrayList<Course>();
-
 	public static void main(String[] args) {
 		System.out.print("Enter url: ");
 		Scanner sc = new Scanner(System.in);
