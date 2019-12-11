@@ -1,82 +1,43 @@
-import org.json.simple.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 
-/**
- * 
- * @author Payal, Mariana, Rudra
- * This class is responsible for saving the course
- * information, given through an ArrayList, to a
- * text file and a JSON file.
- *
- */
+
 public class Writer {
-	/*public static void main(String[] args) {
-		ScreenScraper s = new ScreenScraper();
-		ArrayList<Course> courses = s.getCourses();
-		for(Course c:courses) {
-			System.out.println(c.getCourseNumber());
-			System.out.println(c.getCourseTitle());
-			System.out.println(c.getCourseCredits());
-			System.out.println();
-		}
-	}*/
-	/**
-	 * 
-	 * @param courses list of courses, given by ScreenScraper class
-	 */
-	public void writeToText(ArrayList<Course> courses) {
+    public boolean writeToText(String file, String string) {
+    	
 		try {
 			//creates text-output stream
 			PrintWriter writer = new PrintWriter(new BufferedWriter
-					(new FileWriter("output.txt")));
+					(new FileWriter(file)));
 			
-			for(Course c: courses) {
-				writer.println(c.getCourseNumber());
-				writer.println(c.getCourseTitle());
-				writer.println(c.getCourseCredits());
-				writer.println();
-			}
+			//for(Course c: string) {
+				writer.println(string);
+			//}
 			
 			writer.close();
+			return true;
 		}
 		catch(Exception e) {
-			System.out.println("Something went wrong...");
+			return false;
 		}		
 	}
-	
-	/**
-	 * 
-	 * @param courses list of courses, given by ScreenScraper class
-	 */
-	@SuppressWarnings("unchecked")
-	public void writeToJSON(ArrayList<Course> courses) {
+    public boolean writeToJSON(String file, String string) {
+    	
 		try {
-			PrintWriter writer = new PrintWriter(new BufferedWriter(
-					new FileWriter("output.json")));
+			//creates text-output stream
+			PrintWriter writer = new PrintWriter(new BufferedWriter
+					(new FileWriter(file)));
 			
-			JSONObject courseObj;
-			JSONArray array = new JSONArray();
+			//for(Course c: string) {
+				writer.println(string);
+			//}
 			
-			for(Course c: courses) {
-				courseObj = new JSONObject();
-				courseObj.put("course number", c.getCourseNumber());
-				courseObj.put("course title", c.getCourseTitle());
-				courseObj.put("course credits", c.getCourseCredits());
-				
-				
-				array.add(courseObj);
-			}
-			
-			JSONObject outer = new JSONObject();
-			outer.put("courses", array);
-			writer.println(outer.toString());
 			writer.close();
+			return true;
 		}
 		catch(Exception e) {
-			System.out.println("Something went wrong...");
-		}
+			return false;
+		}		
 	}
 }

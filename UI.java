@@ -23,9 +23,26 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.net.URL;
- 
+
+/**
+ * 
+ * @author Rudra, Mariana, Payal
+ * 
+ * MainApp is a separate class, and in charge of setting up the menu
+ *
+ */
+class MainApp{
+	public static void main(String[] args) {
+		UI ui = new UI();
+		ui.setupMenu();
+	}
+	
+}
+
+
 /** 
  * @author Rudra, Mariana, Payal
  * This class takes care of the interface
@@ -36,6 +53,8 @@ public class UI extends JFrame implements ActionListener {
     /**
 	 * 
 	 */
+	static ArrayList<Course> courses = new ArrayList<Course>();
+
 	private static final long serialVersionUID = 1L;
 	public void setupMenu() {
     	/**
@@ -80,9 +99,10 @@ public class UI extends JFrame implements ActionListener {
      * when a certain button is clicked.
      */
     public UI() {
+    	Writer w = new Writer();
         // set up the look inside the constructor
     	setTitle("Web Scraper");
-        setBounds(50,100,400,300);  // left = 50, top=100, width=400, height= 300
+        setBounds(100,150,450,350);  // left = 50, top=100, width=400, height= 300
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         /**
          * These panels will make up the interface.
@@ -131,7 +151,7 @@ public class UI extends JFrame implements ActionListener {
                 String addr = sc.nextLine();
                 String line;
                 String linesCollection = "";
-                ArrayList<Course> courses = new ArrayList<Course>();
+                
                 //ArrayList<Course> courses = new ArrayList<Course>();
                 /**
                  * @return website content
@@ -142,7 +162,6 @@ public class UI extends JFrame implements ActionListener {
                     URL link = new URL(addr);
                     Scanner linksc = new Scanner(link.openStream());
                     while (linksc.hasNextLine()) {
-                    	//convertLinesToCourses(linesCollection);
                         line = linksc.nextLine();
                         txt.setText(txt.getText() + line + "\n");
                         linesCollection += line;
@@ -159,58 +178,27 @@ public class UI extends JFrame implements ActionListener {
          * Button location south
          */
         btmPnl.add(btnSaveToText);
-        
-        /*btnSaveToText.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		ScreenScraper s = new ScreenScraper();
-        		Writer w = new Writer();
-        		
-        		try {
-        			w.writeToText(s.getCourses());
-        		} catch(Exception ex) {
-        			ex.printStackTrace();
-        			System.out.println("Could not save to text.");
-        		}
-        	}
-        });*/
-        	
+ 
         c.add(btmPnl,BorderLayout.SOUTH);
         
         btnSaveToText.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	ArrayList<Course> courses = new ArrayList<Course>();
-            	String text = txtURL.getText();
             	JFrame parentFrame = new JFrame();
             	 
             	JFileChooser fileChooser = new JFileChooser();
-            	fileChooser.setDialogTitle("Specify a file to save");   
+            	fileChooser.setDialogTitle("Save to Text (no need to add .txt)");   
             	 
             	int userSelection = fileChooser.showSaveDialog(parentFrame);
             	
             	
             	if (userSelection == JFileChooser.APPROVE_OPTION) {
-            	    //FileWriter fileToSave = new FileWriter(fileChooser.getSelectedFile()
-					//		+".txt");
-					writeToText(fileChooser.getSelectedFile()+".txt", txt.getText());
-					//fileToSave = txt.getText();
+					w.writeToText(fileChooser.getSelectedFile()+".txt", txt.getText());
             	}
         }
         });
         
         btmPnl.add(btnSaveToJSON);
-        /*btnSaveToJSON.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		ScreenScraper s = new ScreenScraper();
-        		Writer w = new Writer();
-        		
-        		try {
-        			w.writeToJSON(s.getCourses());
-        		} catch(Exception ex) {
-        			ex.printStackTrace();
-        			System.out.println("Could not save to JSON.");
-        		}
-        	}
-        });*/
+  
         
         c.add(btmPnl,BorderLayout.SOUTH);
         btnSaveToJSON.addActionListener(new ActionListener() {
@@ -218,65 +206,65 @@ public class UI extends JFrame implements ActionListener {
             	JFrame parentFrame = new JFrame();
             	 
             	JFileChooser fileChooser = new JFileChooser();
-            	fileChooser.setDialogTitle("Specify a file to save");   
+            	fileChooser.setDialogTitle("Save to JSON (no need to add .json)");   
             	 
             	int userSelection = fileChooser.showSaveDialog(parentFrame);
             	
             	
             	if (userSelection == JFileChooser.APPROVE_OPTION) {
-            		writeToText(fileChooser.getSelectedFile()+".json", txt.getText());
+            		w.writeToJSON(fileChooser.getSelectedFile()+".json", txt.getText());
             	}
         }
         });
         setupMenu();
     }
     private static ArrayList<Course> convertLinesToCourses(String linesCollection){
-		String[] tableStrings = linesCollection.split("<table>");
-		String[] courseStrings = tableStrings[0].split("<tr>");
-		for(String course : courseStrings) {
+		String[] websiteLines = linesCollection.split("<div id=\"degreeRequirements\">");
+		String[] tableStrings = websiteLines[0].split("<table>");
+		String[] tBodyStrings = tableStrings[0].split("<tbody>");
+		String[] courseStrings = tBodyStrings[0].split("<tr>");
+		for (String string : tBodyStrings) {
+			System.out.println(tBodyStrings);
+			System.out.println(Arrays.toString(tBodyStrings));
+		}
+		for (String strings: courseStrings) {
+			System.out.print(courseStrings);
+			System.out.println(Arrays.toString(courseStrings));
+		}
+		for(String course : tBodyStrings) {
 			String[] elementStrings = course.split("<td");
 			Course courseObj = new Course();
 			for(String elementString : elementStrings) {
 				String[] elements = elementString.split("\">");
 				if(elements[0].contains("coursenumber")) {
-				int endOfCourseNameIndex = elements[3].indexOf("</a></td><td");
-				String classId = elements[3].substring(0, endOfCourseNameIndex);
+				int endOfCourseNameIndex = elements[2].indexOf("</a></td><td");
+				String classId = elements[2].substring(0, endOfCourseNameIndex);
 				courseObj.setCourseNumber(classId);
 				}
 				if(elements[0].contains("coursetitle")) {
-				int endOfCourseTitleIndex = elements[2].indexOf("</td><td");
-				String classTitle = elements[2].substring(0, endOfCourseTitleIndex);
+				int endOfCourseTitleIndex = elements[1].indexOf("</td><td");
+				String classTitle = elements[1].substring(0, endOfCourseTitleIndex);
 				courseObj.setCourseTitle(classTitle);
 				}
 				if(elements[0].contains("credits")) {
-				String credits = elements[2].substring(0, 1);
+				String credits = elements[1].substring(0, 1);
 				courseObj.setCourseCredits(credits);
 				}
 			}
+			courses.add(courseObj);
 		}
-		return null;
+		for(Course course: courses) {
+			System.out.printf("%s\t%s\t%s\n", course.getCourseNumber(), course.getCourseTitle(), course.getCourseCredits());
+			
+		}
+		
+		return courses;
+		//return null;
 		
 	}
-    
-    public boolean writeToText(String file, String string) {
-    	
-		try {
-			//creates text-output stream
-			PrintWriter writer = new PrintWriter(new BufferedWriter
-					(new FileWriter(file)));
-			
-			//for(Course c: string) {
-				writer.println(string);
-			//}
-			
-			writer.close();
-			return true;
-		}
-		catch(Exception e) {
-			return false;
-		}		
-	}
 
+    
+    
     public void actionPerformed(ActionEvent e) {
     /**
      * This is used for debugging purposes for our code
