@@ -4,19 +4,16 @@
  * This class contains the private data, getters and setters, constructor, and the toString function.
  *
  */
-
 public class Course {
 	private String courseNumber;
 	private String courseTitle;
 	private String courseCredits;
-	
 	public Course() {
 		courseNumber = "";
 		courseTitle = "";
 		courseCredits = "";
 		
 	}
-
 	public String getCourseNumber() {
 		return courseNumber;
 	}
