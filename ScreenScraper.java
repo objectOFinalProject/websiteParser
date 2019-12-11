@@ -9,13 +9,14 @@
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
 public class ScreenScraper {
-	ArrayList<Course> courses = new ArrayList<Course>();
+	static ArrayList<Course> courses = new ArrayList<Course>();
 
-	public void processURL() {
+	public static void main(String[] args) {
 		System.out.print("Enter url: ");
 		Scanner sc = new Scanner(System.in);
 		String addr = "http://lewisu.smartcatalogiq.com/Undergrad-2018-2019/Undergraduate-Catalog/College-of-Arts-and-Sciences/Computer-Science/Computer-Science-Bachelor-of-Science";
@@ -36,12 +37,23 @@ public class ScreenScraper {
 			ex.printStackTrace();
 			System.out.println("Could not connect to the website.");
 		}	
+		
 
 	}	
-	private ArrayList<Course> convertLinesToCourses(String linesCollection){
-		String[] tableStrings = linesCollection.split("<table>");
-		String[] courseStrings = tableStrings[0].split("<tr>");
-		for(String course : courseStrings) {
+	private static ArrayList<Course> convertLinesToCourses(String linesCollection){
+		String[] websiteLines = linesCollection.split("<div id=\"degreeRequirements\">");
+		String[] tableStrings = websiteLines[0].split("<table>");
+		String[] tBodyStrings = tableStrings[0].split("<tbody>");
+		String[] courseStrings = tBodyStrings[0].split("<tr>");
+		for (String string : tBodyStrings) {
+			System.out.println(tBodyStrings);
+			System.out.println(Arrays.toString(tBodyStrings));
+		}
+		for (String strings: courseStrings) {
+			System.out.print(courseStrings);
+			System.out.println(Arrays.toString(courseStrings));
+		}
+		for(String course : tBodyStrings) {
 			String[] elementStrings = course.split("<td");
 			Course courseObj = new Course();
 			for(String elementString : elementStrings) {
@@ -62,13 +74,14 @@ public class ScreenScraper {
 				}
 			}
 			courses.add(courseObj);
-
 		}
-		return null;
+		for(Course course: courses) {
+			System.out.printf("%s\t%s\t%s\n", course.getCourseNumber(), course.getCourseTitle(), course.getCourseCredits());
+			
+		}
 		
-	}
-	
-	public ArrayList<Course> getCourses(){
 		return courses;
+		//return null;
+		
 	}
 }
